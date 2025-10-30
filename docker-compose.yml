@@ -9,6 +9,8 @@ services:
         # This build argument ensures only CPU dependencies are installed
         - RUNTIME=cpu
     ports:
+      # The port you specify here (8004) is the internal container port.
+      # Elest.io will handle the external port mapping.
       - "${PORT:-8004}:8004"
     volumes:
       # Mount local config file for persistence
@@ -20,11 +22,14 @@ services:
       - ./logs:/app/logs
       # Named volume for Hugging Face model cache to persist across container rebuilds
       - hf_cache:/app/hf_cache
-    
     restart: unless-stopped
     environment:
       # Enable faster Hugging Face downloads inside the container
       - HF_HUB_ENABLE_HF_TRANSFER=1
+      # You can add other environment variables here if needed
+      # For example, to set the number of CPU threads:
+      # - OMP_NUM_THREADS=4
+      # - MKL_NUM_THREADS=4
 
 # Define the named volume for the Hugging Face cache
 volumes:
